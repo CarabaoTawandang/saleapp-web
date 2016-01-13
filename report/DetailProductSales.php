@@ -97,7 +97,7 @@ $(function(){
 
       <div class="header">
         
-        <h3>รายงานการขายประจำวัน</h3>
+        <h3>รายงานสรุปบิลรายวัน</h3>
             
           
   
@@ -111,12 +111,17 @@ $(function(){
 	<tr><td align="center">
 	<B>วันที่: </B><input type="text" id="txt_date1" name="txt_date1" value="<?=date('Y-m-d'); ?>">
 	<B> ถึง : </B><input type="text" id="txt_date2" name="txt_date2" value="<?=date('Y-m-d'); ?>">
-	<B>ศูยน์DC: </B>
+	<B>DC: </B>
 	<select  id="txt_DC" name="txt_DC" style="width:170px;" >
-	<option value="">-All-</option>
-		<? $sqlOp="select dc_groupname,dc_groupid
-			from st_user_group_dc";
-			$qryOp=sqlsrv_query($con,$sqlOp);
+	<option value="">-เลือก DC-</option>
+		<? $sqlOp="select a.dc_groupname,a.dc_groupid
+			from st_user_group_dc a   ";
+			if($userType <>"7" and $userType2<>""){
+				$sqlOp.=" left join st_user u
+				on u.dc_groupid =a.dc_groupid
+				where u.User_id= '$USER_id'"; }
+			echo $sqlOp;
+			$qryOp=sqlsrv_query($con,$sqlOp,$params,$options);
 			while($deOp=sqlsrv_fetch_array($qryOp)){
 			echo "<option value='".$deOp['dc_groupid']." '>";
 			echo $deOp['dc_groupname'];

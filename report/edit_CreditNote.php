@@ -9,12 +9,10 @@
 		$id=$_GET['id'];
 		
 		$filter="select h.Ref_Docno,cast(h.Delivery_date as date) as Delivery_date ,cast(h.Delivery_date as time) as Delivery_time
- ,h.CustNum as Cust1 ,h.CN_id ,h.CN_name ,h.Remark ,c.CustName ,c.AddressNum ,c.AddressMu ,c.DISTRICT_NAME ,c.AMPHUR_NAME 
- ,c.PROVINCE_NAME,c.PROVINCE_CODE ,c.cust_type_name ,h.Createby ,st_user.Salecode,st_user.name,st_user.surname 
- from st_CN_head h left join st_View_cust_web c on c.CustNum = h.CustNum left join st_user 
-on h.Createby = st_user.User_id where Ref_Docno='$id'
-		
-		 ";
+		,h.CustNum as Cust1 ,h.CN_id ,h.CN_name ,h.Remark ,c.CustName ,c.AddressNum ,c.AddressMu ,c.DISTRICT_NAME ,c.AMPHUR_NAME 
+		,c.PROVINCE_NAME,c.PROVINCE_CODE ,c.cust_type_name ,h.Createby ,st_user.Salecode,st_user.name,st_user.surname 
+		from st_CN_head h left join st_View_cust_web c on c.CustNum = h.CustNum left join st_user 
+		on h.Createby = st_user.User_id where Ref_Docno='$id' ";
 		// echo $filter;
 		$filter=sqlsrv_query($con,$filter); 
 		$fil=sqlsrv_fetch_array($filter);
@@ -62,7 +60,7 @@ $(function(){
 	<div class="header"><h3>ยกเลิกบิล<?=$re['AMPHUR_NAME'];?></h3><!---หัวเรื่องหลัก-->
            <p>&nbsp;</p><!---หัวเรื่องรอง-->
 		   <input type="button" value="ค้นหา" id="add" onclick="window.location='?page=from_CreditNote';" class="inner_position_right" >
-		   **หมายเหตุ : เมื่อสถานะอนุมัติหรือไม่อนุมัติ จะไม่สามารถแก้ไขข้อมูลได้
+		   **หมายเหตุ : แก้ไขข้อมูลได้ต่อเมื่อ สิทธิเป็นแม่ทัพหรือAdminsale และสถานะขอยกเลิกเท่านั้น
 	</div><div class="sep"></div><br>
 		<!---เนื้อหา-->
 <form  method="post" name="frmuser" id="frmuser" >
@@ -93,20 +91,18 @@ $(function(){
 <tr ><td colspan="2">&nbsp;</td></tr>
 
 <? 	$i=0;
-$sqlQdetail="
-select q.Ref_Docno,q.P_Code ,pro.PRODUCTNAME,pro.st_unit_id as unit123 
-,q.st_unit_qty_1 ,q.st_unit_qty_2 ,q.st_unit_qty_3 ,q.st_unit_qty_1*u1.st_unit_qty as AA ,q.st_unit_qty_2*u2.st_unit_qty as BB ,q.st_unit_qty_3 As CC 
-,(isnull(q.st_unit_qty_1*u1.st_unit_qty,0)+isnull(q.st_unit_qty_2*u2.st_unit_qty,0)+ isnull(q.st_unit_qty_3,0)) as total
- ,(isnull(q.st_unit_qty_1*u1.st_unit_qty,0)+isnull(q.st_unit_qty_2*u2.st_unit_qty,0)+ isnull(q.st_unit_qty_3,0))/u1.st_unit_qty as box 
- ,((isnull(q.st_unit_qty_1*u1.st_unit_qty,0)+isnull(q.st_unit_qty_2*u2.st_unit_qty,0)+ isnull(q.st_unit_qty_3,0))%u1.st_unit_qty)/u2.st_unit_qty as pack
-  ,((isnull(q.st_unit_qty_1*u1.st_unit_qty,0)+isnull(q.st_unit_qty_2*u2.st_unit_qty,0)+ isnull(q.st_unit_qty_3,0))%u1.st_unit_qty)%u2.st_unit_qty as unil 
-  ,q.totalamount ,q.PromotionId ,q.PromotionName ,q.PromotionRemark ,q.totaldiscount ,q.totalamount-q.totaldiscount as amount 
-  from st_CN_detail q left join st_item_product pro 
-  on q.P_Code =pro.P_Code left join st_item_unit_con u1 
-  on u1.P_Code = q.P_Code and u1.st_unit_id= 'ลัง' left join st_item_unit_con u2 
-  on u2.P_Code = q.P_Code and u2.st_unit_id= 'แพ็ค'
- where q.Ref_Docno ='$id'
- ";
+	$sqlQdetail="select q.Ref_Docno,q.P_Code ,pro.PRODUCTNAME,pro.st_unit_id as unit123 
+	,q.st_unit_qty_1 ,q.st_unit_qty_2 ,q.st_unit_qty_3 ,q.st_unit_qty_1*u1.st_unit_qty as AA ,q.st_unit_qty_2*u2.st_unit_qty as BB ,q.st_unit_qty_3 As CC 
+	,(isnull(q.st_unit_qty_1*u1.st_unit_qty,0)+isnull(q.st_unit_qty_2*u2.st_unit_qty,0)+ isnull(q.st_unit_qty_3,0)) as total
+	,(isnull(q.st_unit_qty_1*u1.st_unit_qty,0)+isnull(q.st_unit_qty_2*u2.st_unit_qty,0)+ isnull(q.st_unit_qty_3,0))/u1.st_unit_qty as box 
+	,((isnull(q.st_unit_qty_1*u1.st_unit_qty,0)+isnull(q.st_unit_qty_2*u2.st_unit_qty,0)+ isnull(q.st_unit_qty_3,0))%u1.st_unit_qty)/u2.st_unit_qty as pack
+	,((isnull(q.st_unit_qty_1*u1.st_unit_qty,0)+isnull(q.st_unit_qty_2*u2.st_unit_qty,0)+ isnull(q.st_unit_qty_3,0))%u1.st_unit_qty)%u2.st_unit_qty as unil 
+	,q.totalamount ,q.PromotionId ,q.PromotionName ,q.PromotionRemark ,q.totaldiscount ,q.totalamount-q.totaldiscount as amount 
+	from st_CN_detail q left join st_item_product pro 
+	on q.P_Code =pro.P_Code left join st_item_unit_con u1 
+	on u1.P_Code = q.P_Code and u1.st_unit_id= 'ลัง' left join st_item_unit_con u2 
+	on u2.P_Code = q.P_Code and u2.st_unit_id= 'แพ็ค'
+	where q.Ref_Docno ='$id' ";
 //echo $sqlQdetail;
 	$sqlQdetail=sqlsrv_query($con,$sqlQdetail); 
 	while($Qdetail=sqlsrv_fetch_array($sqlQdetail))
@@ -140,7 +136,7 @@ if($Qdetail['PromotionRemark']) {echo " (".$Qdetail['PromotionRemark'].") ";}
 
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr ><td ><B>สถานะ</B></td><td >
-<select id="txt_status" name="txt_status" <?if($fil['CN_id'] <> "3" or  $userType=="6"){echo 'disabled';} ?> >
+<select id="txt_status" name="txt_status" <?if($fil['CN_id'] <> "3" and  $userType2!=" 7_6"){echo 'disabled';} ?> >
 <option value="<? echo $fil['CN_id'];?>"><? echo $fil['CN_name'];?></option>
 <? 
 
@@ -160,11 +156,11 @@ $sqlStatus=sqlsrv_query($con,$sqlStatus);
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr ><td ><B>เหตุผล : </B></td><td >
 <input type="text" size="50" id="txt_remark" name="txt_remark" value="<? echo $fil['CN_Remark'];?>" 
- <?if($fil['CN_id']<> "3" or  $userType=="6"){echo 'disabled';} ?>>
+ <?if($fil['CN_id']<> "3" and   $userType2!=" 7_6"){echo 'disabled';} ?>>
 </tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td colspan="2" align="left" ><input type="hidden" id="hd_cmd"  name="hd_cmd" />
-<? if($fil['CN_id']== "3" and  $userType<>"6"){ ?>
+<? if($fil['CN_id']== "3" and   ($userType2 =="7_6" or $userType2 =="7_1")){ ?>
 <input type="button" id="save" name="save" value="save">	
 <? } 
 

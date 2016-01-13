@@ -31,15 +31,15 @@ include("../includes/config.php");
 	</tr>
 	<? 
 	
-	$txt_warehouse_location =$_POST['txt_warehouse_location'];
-	$txtDC=$_POST['txtDC'];
-	$txt_saletype =$_POST['txt_saletype'];
-	$txt_name=$_POST['txt_name'];
-	$txt_surname =$_POST['txt_surname'];
-	$txt_username =$_POST['txt_username'];
-	$txtType =$_POST['txtType'];
-	$txtType2 =$_POST['txtType2'];
-	$txt_userId =$_POST['txt_userId'];
+	$txt_warehouse_location =trim($_POST['txt_warehouse_location']);
+	$txtDC=trim($_POST['txtDC']);
+	$txt_saletype =trim($_POST['txt_saletype']);
+	$txt_name=trim($_POST['txt_name']);
+	$txt_surname =trim($_POST['txt_surname']);
+	$txt_username =trim($_POST['txt_username']);
+	$txtType =trim($_POST['txtType']);
+	$txtType2 =trim($_POST['txtType2']);
+	$txt_userId =trim($_POST['txt_userId']);
 	
 	$sql="select st_user.*
 	,st_saletype.SaleTypeName

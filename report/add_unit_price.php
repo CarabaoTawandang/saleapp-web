@@ -148,10 +148,10 @@ $(function()
 </select>&nbsp;<B style="color:red;text-align:center;">*</B>
 
 <tr><td colspan="2">&nbsp;</td></tr>
-	<tr><td width="150"><B>ประเภท</B></td><td>
+	<tr><td width="150"><B>ประเภทขาย</B></td><td>
 	
 <select  id="Typesale" name="Typesale" style="width:170px;" required>	
-	<option value="">-เลือกประเภท-</option>
+	<option value="">-ประเภทขาย-</option>
 
 
 </select>&nbsp;<B style="color:red;text-align:center;">*</B>

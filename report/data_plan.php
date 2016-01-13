@@ -3,16 +3,16 @@ session_start();
 set_time_limit(0);
 include("../includes/config.php");
 
-$txt_DC=$_POST['txt_DC'];
-$txt_id=$_POST['txt_id'];
-$txt_name=$_POST['txt_name'];
-$txt_pro=$_POST['txt_pro'];
-$txt_aum=$_POST['txt_aum'];
-$txt_dis=$_POST['txt_dis'];
-$txt_all=$_POST['txt_all'];
+$txt_DC=trim($_POST['txt_DC']);
+$txt_id=trim($_POST['txt_id']);
+$txt_name=trim($_POST['txt_name']);
+$txt_pro=trim($_POST['txt_pro']);
+$txt_aum=trim($_POST['txt_aum']);
+$txt_dis=trim($_POST['txt_dis']);
+$txt_all=trim($_POST['txt_all']);
 
-$order_n=$_POST['order_n'];
-$order_by=$_POST['order_by'];
+$order_n=trim($_POST['order_n']);
+$order_by=trim($_POST['order_by']);
 
 $filter="select distinct st_Master_plan.Plan_id,st_Master_plan.Plan_name
 from st_Master_plan 

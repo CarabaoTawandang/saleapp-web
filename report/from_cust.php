@@ -122,21 +122,11 @@ $(function(){
 <table cellpadding="0" cellspacing="0"  border="0" align="center"  class="box" width="1124px">
 
 <tr><td colspan="2" align="center">
-	<B style="color:black;text-align:center;">
-	ชื่อร้าน : <input type="text" id="txt_name" name="txt_name" style="width:200px;" ></B>
-	รหัสร้าน : <input type="text" id="txt_idCust" name="txt_idCust" style="width:200px;"/>
 	
-	<B>DC</B>
-			<select id="txtDC" name="txtDC"  style="width:200px;">
-				<option value="">- Selete -</option>
-				<?	$sql="SELECT  dc_groupid ,dc_groupname  FROM st_user_group_dc  order by  dc_groupid asc ";
-					$qry=sqlsrv_query($con,$sql);
-					while($detail=sqlsrv_fetch_array($qry)){
-				?>
-				<option value="<?print $detail['dc_groupid']?>" ><?print $detail['dc_groupname']?></option>
-				<?}?>
-			</select>
-	<B style="color:black;text-align:center;">ภาค :</B>
+	
+	รหัสร้าน : <input type="text" id="txt_idCust" name="txt_idCust" style="width:200px;"/>
+	<B style="color:black;text-align:center;">ชื่อร้าน : </B><input type="text" id="txt_name" name="txt_name" style="width:200px;" >
+	ภาค :
 	<select id="txt_geo" name="txt_geo"  style="width:150px;">
 		<option value=""> - Selete -</option>
 	<?	  $sql="select GEO_CODE,GEO_NAME
@@ -159,6 +149,17 @@ $(function(){
 	
 	?>
 	</select>
+	<B>DC</B>
+			<select id="txtDC" name="txtDC"  style="width:200px;">
+				<option value="">- Selete -</option>
+				<?	$sql="SELECT  dc_groupid ,dc_groupname  FROM st_user_group_dc  order by  dc_groupid asc ";
+					$qry=sqlsrv_query($con,$sql);
+					while($detail=sqlsrv_fetch_array($qry)){
+				?>
+				<option value="<?print $detail['dc_groupid']?>" ><?print $detail['dc_groupname']?></option>
+				<?}?>
+			</select>
+	
 </td></tr><tr><td colspan="2">&nbsp;</td></tr><tr><td align="center">	
 	
 	

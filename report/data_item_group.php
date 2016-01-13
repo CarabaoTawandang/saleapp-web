@@ -5,8 +5,8 @@ set_time_limit(0);
 include("../includes/config.php");
 
 $txt_all=$_POST['txt_all'];
-$txt_name =$_POST['txt_name'];
-$txt_id =$_POST['txt_id'];
+$txt_name =	trim($_POST['txt_name']);
+$txt_id =trim($_POST['txt_id']);
 $sql="select st_item_group.* from  st_item_group ";
 if($txt_id){$sql.="where prd_grp_id like '%$txt_id%'  "; }
 else if($txt_name){$sql.="where prd_grp_nm like '%$txt_name%'  "; }

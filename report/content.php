@@ -615,6 +615,11 @@ $page = $_GET['page'];
 				include "report/form_dailysales2ALLdc.php";
 				break;
 				
+				case "form_ReportCN";
+				include "report/form_ReportCN.php";
+				break;
+				
+				
 				
 				
 	}

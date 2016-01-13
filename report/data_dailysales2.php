@@ -122,18 +122,17 @@ $(function(){
 		$ProductBy=sqlsrv_query($con,$ProductBy);$countProduct=0;
 		while($By=sqlsrv_fetch_array($ProductBy)) 
 		{	$ByPro[]=$By['P_Code'];
-			echo '<th align="center" colspan="2">'.$By['PRODUCTNAME'].'</th>';
+			echo '<th align="center" colspan="2">'.$By['PRODUCTNAME'].'-CN</th>';
 			 $countProduct++;
 		}
 	
 	?>
 	
 	
-	<th align="center" rowspan="2">ยอดขาย</th>
-	<th align="center" rowspan="2">CN</th>
+	
 	<th align="center" rowspan="2">ส่วนลด S+</th>
 	
-	<th align="center" rowspan="2">ยอดขายสุทธิ</th>
+	<th align="center" rowspan="2">ยอดขายสุทธิ-CNแล้ว</th>
 	<th align="center" rowspan="2">+/-<br>โอนเงิน<br>ขาด/เกิน</th>
 	<th align="center" rowspan="2">เงินโอนสุทธิ</th>
     <th align="center" rowspan="2">Receipt number</th>
@@ -149,7 +148,7 @@ $(function(){
 		<th align="center">แพ็ค</th>';
 	}
 	?>
-	<th align="center">รวมขาย</th>
+	<th align="center">รวมขาย-CNแล้ว</th>
 	<th align="center">รวมCN</th>
 	<th align="center">รวมส่วนลด S+</th>
 	<th align="center">ขายสุทธิ</th>
@@ -178,21 +177,22 @@ $(function(){
 			//echo ' === '.count($ByPro);
 			for($i=0;$i<$countProduct;$i++)
 			{	$Pro=$ByPro[$i];
-				$sqlSum="select 
-				sum(st_unit_qty_3)/con1.st_unit_qty as box
-				,(sum(st_unit_qty_3)%con1.st_unit_qty)/con2.st_unit_qty as pack
-
-				from st_Sale_detail left join st_Sale_head
-				on st_Sale_detail.Sales_Docno = st_Sale_head.Sales_Docno LEFT OUTER JOIN  dbo.st_item_unit_con con1
-				 ON dbo.st_Sale_detail.P_Code = con1.P_Code AND con1.st_unit_id = 'ลัง' LEFT OUTER JOIN  dbo.st_item_unit_con con2
-				 ON dbo.st_Sale_detail.P_Code = con2.P_Code AND con2.st_unit_id = 'แพ็ค'  
-
+				$sqlSum1="select 
+				st_Sale_detail.P_Code,st_Sale_detail.PRODUCTNAME,
+				sum(st_Sale_detail.st_unit_qty_3)/con1.st_unit_qty as box 
+				,(sum(st_Sale_detail.st_unit_qty_3)%con1.st_unit_qty)/con2.st_unit_qty as pack
+				,sum(st_Sale_detail.totalamount) as totalamountPrice
+				from st_Sale_detail left join st_Sale_head on st_Sale_detail.Sales_Docno = st_Sale_head.Sales_Docno 
+				LEFT OUTER JOIN  dbo.st_item_unit_con con1 ON dbo.st_Sale_detail.P_Code = con1.P_Code AND con1.st_unit_id = 'ลัง' 
+				LEFT OUTER JOIN  dbo.st_item_unit_con con2 ON dbo.st_Sale_detail.P_Code = con2.P_Code AND con2.st_unit_id = 'แพ็ค'  
+				left join st_CN_detail CNd on st_Sale_detail.Sales_Docno = CNd.Ref_Docno and st_Sale_detail.P_Code=CNd.P_Code
+				left join st_CN_head CNh on CNd.Ref_Docno=CNh.Ref_Docno 
 				where  st_Sale_detail.Createby='$reUDC[UID]' 
 				and cast(st_Sale_head.Sales_Docdate  as date) = '$dateTo'  
 				and st_Sale_detail.P_Code='$Pro'
-
-				group by con1.st_unit_qty,con2.st_unit_qty ";
-				$sqlSum=sqlsrv_query($con,$sqlSum);
+				and (CNd.Ref_Docno is null or  CNh.CN_id <>'1'  )
+				group by st_Sale_detail.P_Code,st_Sale_detail.PRODUCTNAME,con1.st_unit_qty,con2.st_unit_qty ";
+				$sqlSum=sqlsrv_query($con,$sqlSum1);
 				$sqlSum=sqlsrv_fetch_array($sqlSum);
 				echo '<td align="center">';
 				echo $sqlSum['box'];
@@ -206,46 +206,14 @@ $(function(){
 				 $sumpack[$i]=$sumpack[$i]+$sqlSum['pack']; 
 				}
 			}
+			
+			
 			?>
-			<td align="right">
-			<?
-			$sqlTotal="select sum(st_Sale_detail.totalamount) as totalamount from st_Sale_detail left join st_Sale_head
-			on st_Sale_detail.Sales_Docno = st_Sale_head.Sales_Docno
-			where  st_Sale_detail.Createby='$reUDC[UID]' 
-			and cast(st_Sale_head.Sales_Docdate  as date) = '$dateTo'";
 			
-			/*$sqlTotal="select sum(totalamount) as totalamount from st_Sale_detail
-			where  st_Sale_detail.Createby='$reUDC[UID]' 
-			and cast(st_Sale_detail.CreateDate as date) = '$dateTo' ";*/
-			$qryTotal=sqlsrv_query($con,$sqlTotal);
-			$reTotal=sqlsrv_fetch_array($qryTotal);
-			//and cast(st_Sale_detail.CreateDate as date) = '$dateTo' ";
-			$qryTotal=sqlsrv_query($con,$sqlTotal);
-			$reTotal=sqlsrv_fetch_array($qryTotal);
-			
-			echo number_format($reTotal['totalamount'],2,'.',','); 
-			$SUM_totalamount=$SUM_totalamount+$reTotal['totalamount']; 
-			?>
-			</td>
-			
-			<td align="center ">-
-				<?
-                 // CN  
-				$sqlCN= "select sum(st_CN_detail.totalamount) as SumBy from st_CN_detail left join st_CN_head
-				on st_CN_detail.Ref_Docno = st_CN_head.Ref_Docno
-				where  st_CN_detail.Createby='$reUDC[UID]'  
-				and cast(st_CN_head.Ref_Docdate as date) = '$dateTo' and st_CN_head.CN_id='1'";
-	            $sqlCN=sqlsrv_query($con,$sqlCN);
-				$sqlCN=sqlsrv_fetch_array($sqlCN);
-				echo number_format($sqlCN['SumBy'],2,'.',',');  
-				$TotalCNBy=$TotalCNBy+$sqlCN['SumBy'];
-			     //echo number_format($TotalCNBy,2,'.',',');  
-				//
-				?>
-
-			</td>
-			<td align="center ">-
-			<? $usernum =$reUDC['UID'];
+			<td align="center ">
+			<? 
+				//ส่วนลดS+
+			  $usernum =$reUDC['UID'];
 			  $sql002="select * from st_dailysales where Dc_groupid='$txt_DC' and Date_pay = '$dateTo' 
 			  and User_id = '$usernum'  ";
 			  $qry002=sqlsrv_query($con,$sql002);
@@ -256,13 +224,25 @@ $(function(){
 			  $R_num = $re002['Receipt_number'];
 			  $detail = $re002['detail'];
 			  $disS= $re002['disS'];
+			  if($disS>0){$disS=$disS*-1;}
 			  echo number_format($disS,2,'.',',');
 		  
-			 if($disS<0){$disS=$disS*-1;}
+			 
 			  $SUM_disS =$SUM_disS+$disS;?>
 			</td>
 			
-			<td align="center "><? $amount=($reTotal['totalamount']-$disS)-$sqlCN['SumBy']; 
+			<td align="center "><? 
+			$sqlTotal="select sum(st_Sale_detail.totalamount) as totalamount 
+			from st_Sale_detail left join st_Sale_head 
+			on st_Sale_detail.Sales_Docno = st_Sale_head.Sales_Docno LEFT OUTER JOIN dbo.st_item_unit_con con1 ON dbo.st_Sale_detail.P_Code = con1.P_Code AND con1.st_unit_id = 'ลัง'
+			LEFT OUTER JOIN dbo.st_item_unit_con con2 ON dbo.st_Sale_detail.P_Code = con2.P_Code AND con2.st_unit_id = 'แพ็ค'
+			left join st_CN_detail CNd on st_Sale_detail.Sales_Docno = CNd.Ref_Docno and st_Sale_detail.P_Code=CNd.P_Code 
+			left join st_CN_head CNh on CNd.Ref_Docno=CNh.Ref_Docno 
+			where st_Sale_detail.Createby='$reUDC[UID]'
+			and cast(st_Sale_head.Sales_Docdate as date) = '$dateTo' 
+			and (CNd.Ref_Docno is null or CNh.CN_id <>'1' ) ";
+			$sqlTotal=sqlsrv_fetch_array(sqlsrv_query($con,$sqlTotal));
+			$amount=($sqlTotal['totalamount']+$disS);
 			echo number_format($amount,2,'.',','); 
 			$sum_amount=$sum_amount+$amount;?></td>
 			<td align="center ">
@@ -274,18 +254,22 @@ $(function(){
 			<td align="center "><?=$R_num?></td>
 			<td align="center "><?=$detail;?></td>
 			<td align="center ">
-			<? 	
-				$sqlTotalby1="select sum(st_Sale_detail.totalamount) as SumBy1 from st_Sale_detail left join st_Sale_head
-				on st_Sale_detail.Sales_Docno = st_Sale_head.Sales_Docno
+			<? 	//ยอดขายรวม
+				$sqlTotalby1="select sum(st_Sale_detail.totalamount) as SumBy1 
+				from st_Sale_detail 
+				left join st_Sale_head on st_Sale_detail.Sales_Docno = st_Sale_head.Sales_Docno
+				left join st_CN_detail CNd on st_Sale_detail.Sales_Docno = CNd.Ref_Docno and st_Sale_detail.P_Code=CNd.P_Code 
+				left join st_CN_head CNh on CNd.Ref_Docno=CNh.Ref_Docno 
 				where  st_Sale_detail.Createby='$reUDC[UID]' 
-				and cast(st_Sale_head.Sales_Docdate  as date) between '$Start'  and '$dateTo'";
+				and cast(st_Sale_head.Sales_Docdate  as date) between '$Start'  and '$dateTo'
+				and (CNd.Ref_Docno is null or CNh.CN_id <>'1' ) ";
 				$sqlTotalby1=sqlsrv_query($con,$sqlTotalby1);
 				$sqlTotalby1=sqlsrv_fetch_array($sqlTotalby1);
 				echo number_format($sqlTotalby1['SumBy1'],2,'.',','); 
 				$TotalSumBy1=$TotalSumBy1+$sqlTotalby1['SumBy1'];
 			?>
 			</td>
-			<td align="center ">-
+			<td align="center ">
 				<?
                  // CNรวม
 				$sqlCN2= "select sum(st_CN_detail.totalamount) as SumByGroup from st_CN_detail left join st_CN_head
@@ -313,6 +297,7 @@ $(function(){
 				and User_id = '$usernum'";
 				$sqlS_sum=sqlsrv_query($con,$sqlS_sum);
 				$sqlS_sum=sqlsrv_fetch_array($sqlS_sum);
+				if($sqlS_sum['SUM_disS']>0){$sqlS_sum['SUM_disS']=$sqlS_sum['SUM_disS']*-1;}
 				echo number_format($sqlS_sum['SUM_disS'],2,'.',',');
 				$TotalSUM_disS=$TotalSUM_disS+$sqlS_sum['SUM_disS'];
 				//
@@ -321,15 +306,8 @@ $(function(){
 			</td>
 			<td align="center ">
 			<? 	
-				 $sqlTotalby="select sum(st_Sale_detail.totalamount) as SumBy from st_Sale_detail left join st_Sale_head
-				on st_Sale_detail.Sales_Docno = st_Sale_head.Sales_Docno
-				where  st_Sale_detail.Createby='$reUDC[UID]' 
-				and cast(st_Sale_head.Sales_Docdate  as date) between '$Start'  and '$dateTo'";
-				$sqlTotalby=sqlsrv_query($con,$sqlTotalby);
-				$sqlTotalby=sqlsrv_fetch_array($sqlTotalby);
-				
-				$sqlTotalby['SumBy']=($sqlTotalby['SumBy']-$sqlCN2['SumByGroup'])+$sqlS_sum['SUM_disS'];
-				echo number_format($sqlTotalby['SumBy'],2,'.',',');  $TotalSumBy=$TotalSumBy+$sqlTotalby['SumBy'];
+				$SumBy11=($sqlTotalby1['SumBy1'])+$sqlS_sum['SUM_disS'];
+				echo number_format($SumBy11,2,'.',',');  $TotalSumBy=$TotalSumBy+$SumBy11;
 
 		
 
@@ -358,7 +336,7 @@ $(function(){
 	?>
 	
 	<tr class="mousechange">
-			<td align="center " colspan="4"></td>
+			<td align="right" colspan="4">รวม</td>
 			<? for($i=0;$i<$countProduct;$i++)
 			{	
 				
@@ -367,17 +345,15 @@ $(function(){
 				
 			}
 			?>
-			<td align="right "><?=number_format($SUM_totalamount,2);?> </td>
-			<td align="center ">-<?=number_format($TotalCNBy,2);?> </td>
-			<td align="center ">-<?=number_format($SUM_disS,2);?> </td>
+			<td align="center "><?=number_format($SUM_disS,2);?> </td>
 			
 			<td align="center "><?=number_format($sum_amount,2); ?></td>
 			<td align="center "><?=number_format($SUM_Pay_diff,2);?> </td>
 			<td align="center "><?=number_format($SUM_Pay,2);?> </td>
 			<td></td><td></td>
 			<td align="center "><?=number_format($TotalSumBy1,2);?> </td>
-			<td align="center ">-<?=number_format($TotalSumByGroup,2);?> </td>
-			<td align="center ">-<?=number_format($TotalSUM_disS,2);?> </td>
+			<td align="center "><?=number_format($TotalSumByGroup,2);?> </td>
+			<td align="center "><?=number_format($TotalSUM_disS,2);?> </td>
 			<td align="center "><?=number_format($TotalSumBy,2);?> </td>
 			<td align="center "><?=number_format($TotalsumPay,2);?> </td>
 	</tr>
@@ -390,40 +366,3 @@ $(function(){
 </html>
 
 
-
-<!-------------
-<? 
-	    if($usernum != "-"){
-		$c_carabao = $all_qty_carabao/50;
-           		$p_carabao = ($all_qty_carabao % 50)/10;
-
-           		$c_start = $all_qty_start/24;
-           		$p_start = ($all_qty_start % 24)/6;
-            ?>
-			<tr  height="30" valign= "top" >
-			<td align="left "><?=$dateTo;?> </td>
-			<td align="left "><?=$temp_salecode;?> </td>
-			<td align="left "><?=$temp_namesale;?> </td>
-			<td align="center "><?=floor($c_carabao);?></td>
-			<td align="center "><?=floor($p_carabao);?> </td>
-			<td align="center "><?=floor($c_start);?></a>
-			<td align="center "><?=floor($p_start);?></a>	
-			<td align="right"><?=number_format($total,2,'.',','); ?></a>	
-				<input type="hidden" id="total_<?=$usernum;?>" name ="total_<?=$usernum;?>"  value="<?=$total;?>">
-		    <?  
-		  $sql002="select * from st_dailysales where Dc_groupid='$txt_DC' and Date_pay = '$dateTo' and User_id = '$usernum'  ";
-		  $qry002=sqlsrv_query($con,$sql002);
-          $re002=sqlsrv_fetch_array($qry002); 
-          $Pay_diff = $re002['Pay_diff'];
-          $Pay   = $re002['Pay'];
-          $Bank = $re002['Bank'];
-          $R_num = $re002['Receipt_number'];
-		 ?>
-		    <td align="center "><?=$Pay_diff?></a>
-			<td align="center "><?=$Pay?></a>	
-		  <td align="center "><?=$Bank?></a>
-			<td align="center "><?=$R_num?></a>		
-			</td>
-			</tr>
-       <? } ?>
-------------->

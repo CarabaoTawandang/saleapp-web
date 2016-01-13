@@ -3,20 +3,20 @@ session_start();
 set_time_limit(0);
 include("../includes/config.php");
 $USER_id				=	$_SESSION["USER_id"];	//รหัสUser
-$txt_geo=$_POST['txt_geo'];//ภาค
-$txt_pro=$_POST['txt_pro'];//จังหวัด
-$txt_aum=$_POST['txt_aum'];//อำเภอ
-$txt_dis=$_POST['txt_dis'];//ตำบล
+$txt_geo=trim($_POST['txt_geo']);//ภาค
+$txt_pro=trim($_POST['txt_pro']);//จังหวัด
+$txt_aum=trim($_POST['txt_aum']);//อำเภอ
+$txt_dis=trim($_POST['txt_dis']);//ตำบล
 
-$txt_idCust=$_POST['txt_idCust'];
-$txt_name =$_POST['txt_name'];
-$txtDC = $_POST['txtDC'];
+$txt_idCust=trim($_POST['txt_idCust']);
+$txt_name =trim($_POST['txt_name']);
+$txtDC = trim($_POST['txtDC']);
 if($txtDC){$sql="select a.*,tbU.name,tbU.surname,tbU2.name as name2,tbU2.surname  as surname2 from st_View_CustInDc_web a  
 left join st_user tbU on a.Updateby = tbU.User_id
 left join st_user tbU2 on a.Createby = tbU2.User_id
 where a.dc_groupid='$txtDC' ";
 	if($txt_idCust){$sql.="and  a.CustNum like '$txt_idCust%' ";}
-	if($txt_name){$sql.="and a.CustName like '$txt_name%' ";}
+	if($txt_name){$sql.="and a.CustName like '%$txt_name%' ";}
 	if($txt_geo){$sql.="and a.GEO_ID='$txt_geo' ";}
 	if($txt_pro){$sql.="and a.PROVINCE_CODE='$txt_pro' ";}
 	if($txt_aum){$sql.="and a.AMPHUR_CODE='$txt_aum' ";}
@@ -30,14 +30,14 @@ left join st_user tbU on a.Updateby = tbU.User_id
 left join st_user tbU2 on a.Createby = tbU2.User_id ";
 if($txt_idCust)
 { 	$sql.="where a.CustNum like '$txt_idCust%' ";
-	if($txt_name){$sql.="and a.CustName like '$txt_name%' ";}
+	if($txt_name){$sql.="and a.CustName like '%$txt_name%' ";}
 	if($txt_geo){$sql.="and a.GEO_ID='$txt_geo' ";}
 	if($txt_pro){$sql.="and a.PROVINCE_CODE='$txt_pro' ";}
 	if($txt_aum){$sql.="and a.AMPHUR_CODE='$txt_aum' ";}
 	if($txt_dis){$sql.="and a.DISTRICT_CODE='$txt_dis' ";}
 }
 else if($txt_name)
-{ 	$sql.="where a.CustName like '$txt_name%' ";
+{ 	$sql.="where a.CustName like '%$txt_name%' ";
 	if($txt_geo){$sql.="and a.GEO_ID='$txt_geo' ";}
 	if($txt_pro){$sql.="and a.PROVINCE_CODE='$txt_pro' ";}
 	if($txt_aum){$sql.="and a.AMPHUR_CODE='$txt_aum' ";}

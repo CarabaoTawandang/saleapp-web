@@ -145,8 +145,8 @@ $(function(){
 	<input type="button" value="เพิ่มกลุ่มสินค้า" id="btn_add3" onclick="window.location='?page=add_item_group';" class="inner_position_center" >
 	<input type="button" value="เพิ่มหน่วย" id="btn_add4" onclick="window.location='?page=add_item_unit';" class="inner_position_center" >
 	<input type="button" value="เพิ่มสินค้า" id="btn_add2" onclick="window.location='?page=add_item_product';" class="inner_position_center" >
-	<input type="button" value="เพิ่มหน่วย+สินค้า" id="btn_add5" onclick="window.location='?page=add_unit_con';" class="inner_position_center">	
-	<input type="button" value="เพิ่มหน่วย+ราคา" id="btn_add6" onclick="window.location='?page=add_unit_price';" class="inner_position_center">
+	<input type="button" value="เพิ่มสินค้าผูกหน่วย" id="btn_add5" onclick="window.location='?page=add_unit_con';" class="inner_position_center">	
+	<input type="button" value="เพิ่มสินค้า+หน่วยผูกราคา" id="btn_add6" onclick="window.location='?page=add_unit_price';" class="inner_position_center">
 	</h5>
 	
   </p>      
@@ -155,16 +155,16 @@ $(function(){
         
     <div class="sep"></div><br>
 	<form method="post" action="" id="frmSearch" name="frmSearch">
-	<table  align="center" border="0" width="1050px"><tr><td align="left">
+	<table  align="center" border="0" width="1050px"><tr><td align="center">
 	รหัส&nbsp;<input type="text" id="txt_id" name="txt_id"  style="width:85px;">&nbsp;&nbsp;
-	ชื่อ&nbsp;<input type="text" id="txt_name" name="txt_name"style="width:85px;">
-	<input type="checkbox" value="all" id="txt_all" name="txt_all">ดูทั้งหมด
+	ชื่อ&nbsp;<input type="text" id="txt_name" name="txt_name"style="width:200px;">
+	<input type="checkbox" value="all" id="txt_all" name="txt_all">ดูทั้งหมด <br><br>
 	<input type="button" value="ค้นหาประเภทสินค้า" class="myButton_form" id="btn_search" name="btn_search">
 	<input type="button" value="ค้นหากลุ่มสินค้า" class="myButton_form" id="btn_search2" name="btn_search2">
 	<input type="button" value="ค้นหาหน่วย" class="myButton_form" id="btn_search3" name="btn_search3">
 	<input type="button" value="ค้นหาสินค้า" class="myButton_form" id="btn_search4" name="btn_search4" >
-	<input type="button" value="หน่วย+สินค้า" class="myButton_form" id="btn_search6" name="btn_search6" >
-	<input type="button" value="หน่วย+ราคา" class="myButton_form" id="btn_search7" name="btn_search7" >
+	<input type="button" value="ค้นหาสินค้าผูกหน่วย" class="myButton_form" id="btn_search6" name="btn_search6" >
+	<input type="button" value="ค้นหาสินค้า+หน่วยผูกราคา" class="myButton_form" id="btn_search7" name="btn_search7" >
 	
 	</td></tr></table>
 	

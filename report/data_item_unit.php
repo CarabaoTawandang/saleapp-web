@@ -5,8 +5,8 @@ set_time_limit(0);
 include("../includes/config.php");
 
 $txt_all=$_POST['txt_all'];
-$txt_name =$_POST['txt_name'];
-$txt_id =$_POST['txt_id'];
+$txt_name =	trim($_POST['txt_name']);
+$txt_id =trim($_POST['txt_id']);
 
 $sql="select st_item_unit.* from  st_item_unit " ;
 if($txt_id){$sql.="where st_unit_id like '%$txt_id'  "; }

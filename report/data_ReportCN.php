@@ -155,7 +155,9 @@ else if($txt_CNid )
 	,ST.SaleTypeName ,cast(h.Delivery_date as date)  ,cast(h.Delivery_date as time) ,h.CustNum 
 	,h.CN_id ,h.CN_name ,h.TaxInv ,h.Remark ,h.CN_Remark ,h.CN_Docno ,h.Createby,UserSale.Salecode ,UserSale.name,UserSale.surname 
 	,c.CustName ,c.AddressNum ,c.AddressMu ,c.DISTRICT_NAME ,c.AMPHUR_NAME ,c.PROVINCE_NAME ,c.PROVINCE_CODE ,c.cust_type_name ,h.Approveby ";
-if($_POST['order_n']){$order_n=$_POST['order_n'];}else{$order_n="cast(h.Ref_Docdate as date)";}
+	
+if($_POST['order_n']){$order_n=$_POST['order_n'];}
+else{$order_n="cast(h.Ref_Docdate as date)";}
 $sort=$_POST['sort'];
 $txt_all=$_POST['txt_all'];
 if($order_n){$filter.=" order by $order_n   $sort "; } 
@@ -209,7 +211,7 @@ $(function(){
 
 ยกเลิกบิลของการค้นหา
 <div>  **หมายเหตุ : บิลที่ยังไม่อนุมัติ จำนวนเงินCN เป็น0</div>
-	<table  align="center" class="tables" >
+	<table  align="center" class="tables">
 	<tr>
 	<th align="center"width="30px">ลำดับ</th>
 	<th align="center"width="100px">ประเภทขาย</th>
@@ -229,7 +231,7 @@ $(function(){
 	<th align="center"width="100px">เหตุผล</th>
 	<th align="center"width="100px">เลขที่ CN</th>
 	<th align="center"width="20px">จำนวนเงินCN</th>
-	<th align="center"width="20px">จัดการ</th>
+	<th align="center"width="20px">ดูDetail</th>
 	</tr>
 	<? $filter=sqlsrv_query($con,$filter); $r=1;
 	while($fil=sqlsrv_fetch_array($filter)){
@@ -292,16 +294,18 @@ $(function(){
 	<td  ><?=$fil['CN_Docno']; ?></td>
 	<td align="center"  ><?=number_format($fil['total']); $total=$total+$fil['total'];?></td>
 	<td align="center"  >
+	<? if(!$Excel) {?>
 	<a href="?page=edit_CreditNote&id=<?=$fil['Ref_Docno']; ?>" >
-	<img src="./images/edit.gif" style="cursor:pointer" alt="Complete">
+	<img src="./images/zoom.png" width="25px" height="25px" style="cursor:pointer" alt="Complete">
 	</a>
-	
+	<? } ?>
 	</td>
 	
 	</tr>
 	<? } ?>
 	<tr class="mousechange" bgColor="#A0CD64" align="right" ><td colspan="16">รวม</td>
-	<td align="center"  ><?=number_format($total); ?></td>
+	<td align="center"  ><? echo number_format($total); ?></td>
+	<td align="center"  ><? echo " "; ?></td>
 	</tr>
 	</table>
 </div></div><br><br>

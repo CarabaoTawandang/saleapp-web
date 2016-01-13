@@ -76,7 +76,7 @@ $(function(){
 
       <div class="header">
         
-        <h3>สรุปยอดขายรายวัน</h3>
+        <h3>รายงานสรุปยอดขายรายวัน</h3>
             
         
   
@@ -91,8 +91,13 @@ $(function(){
 	<B>DC: </B>
 	<select  id="txt_DC" name="txt_DC" style="width:170px;" >
 	<option value="">-เลือก DC-</option>
-		<? $sqlOp="select dc_groupname,dc_groupid
-			from st_user_group_dc";
+		<? $sqlOp="select a.dc_groupname,a.dc_groupid
+			from st_user_group_dc a   ";
+			if($userType <>"7" and $userType2<>""){
+				$sqlOp.=" left join st_user u
+				on u.dc_groupid =a.dc_groupid
+				where u.User_id= '$USER_id'"; }
+			echo $sqlOp;
 			$qryOp=sqlsrv_query($con,$sqlOp,$params,$options);
 			while($deOp=sqlsrv_fetch_array($qryOp)){
 			echo "<option value='".$deOp['dc_groupid']." '>";

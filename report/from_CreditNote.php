@@ -15,7 +15,7 @@ $(function(){
 		$('#btn_add').button();$('#btn_add2').button();
 		$('#btn_search').click(function(){
 					if(($('#txt_DC').prop('value')=='')&&($('#txt_name').prop('value')=='')
-					&&($('#txtdateCN').prop('value')=='')
+					&&($('#txtdateCN').prop('value')=='')&&($('#txtdateCN2').prop('value')=='')
 					&&($('#txt_pro').prop('value')=='')&&($('#txt_aum').prop('value')=='')
 					&&($('#txtdate1').prop('value')=='')&&($('#txtdate2').prop('value')=='')
 					&&($('#txt_CNid').prop('value')=='')&&($('#txt_status').prop('value')=='')
@@ -35,6 +35,16 @@ $(function(){
 							});
 							
 						}	
+		});
+		$('#txtdate1').change(function(){
+			var x1 =$('#txtdate1').prop('value');
+			document.frmSearch.txtdate2.value = x1;
+			
+		});	
+		$('#txtdateCN').change(function(){
+			var x11 =$('#txtdateCN').prop('value');
+			document.frmSearch.txtdateCN2.value = x11;
+			
 		});
 		
 		$('#txt_DC').change(function(){
@@ -122,40 +132,43 @@ $(function(){
 	<form method="post" action="" id="frmSearch" name="frmSearch">
 	<table  cellpadding="0" cellspacing="0" align="center" border="0">
 	<tr><td align="center">
-	วันที่ยกเลิกCN :&nbsp;<input type="text" id="txtdateCN" name="txtdateCN" value=""><br><br>
+	
 	วันที่เปิดบิล :&nbsp;<input type="text" id="txtdate1" name="txtdate1" value="">
-	&nbsp;&nbsp;ถึง :&nbsp;<input type="text" id="txtdate2" name="txtdate2" value="">
-	&nbsp;&nbsp;<B>สถานะ: </B>
-	<select id="txt_status" name="txt_status"><option value="">-ALL-</option>
-<? 
-$sqlStatus="select  CN_id,CN_name from st_CN_status  order by CN_id asc";
-$sqlStatus=sqlsrv_query($con,$sqlStatus); 
-	while($Status=sqlsrv_fetch_array($sqlStatus))
-	{ echo '<option value="'.$Status['CN_id'].'">'.$Status['CN_name'].'</option>';
-	}
-?>
-</select>
-	&nbsp;&nbsp;<B>ประเภทขาย: </B>
-	<select id="txt_saleType" name="txt_saleType"><option value="">-ALL-</option>
-<? 
-$sqlSaleType="select  SaleType,SaleTypeName from st_saletype order by SaleTypeName asc";
-$sqlSaleType=sqlsrv_query($con,$sqlSaleType); 
-	while($SaleType=sqlsrv_fetch_array($sqlSaleType))
-	{ echo '<option value="'.$SaleType['SaleType'].'">'.$SaleType['SaleTypeName'].'</option>';
-	}
-?>
-</select>
-	
-	
+	&nbsp;&nbsp;
+	ถึง :&nbsp;<input type="text" id="txtdate2" name="txtdate2" value="">
+	&nbsp;&nbsp;
+	รหัสบิล:&nbsp;<input type="text" id="txt_id" name="txt_id">
 	</td></tr>
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr><td align="center">
+	&nbsp;&nbsp;ชื่อร้านค้า :&nbsp;<input type="text" id="txt_name" name="txt_name">&nbsp;&nbsp;
+	<B>สถานะ: </B>
+	<select id="txt_status" name="txt_status"><option value="">-ALL-</option>
+	<? 
+	$sqlStatus="select  CN_id,CN_name from st_CN_status  order by CN_id asc";
+	$sqlStatus=sqlsrv_query($con,$sqlStatus); 
+		while($Status=sqlsrv_fetch_array($sqlStatus))
+		{ echo '<option value="'.$Status['CN_id'].'">'.$Status['CN_name'].'</option>';
+		}
+	?>
+	</select>
+	&nbsp;&nbsp;<B>ประเภทขาย: </B>
+	<select id="txt_saleType" name="txt_saleType"><option value="">-ALL-</option>
+	<? 
+	$sqlSaleType="select  SaleType,SaleTypeName from st_saletype order by SaleTypeName asc";
+	$sqlSaleType=sqlsrv_query($con,$sqlSaleType); 
+		while($SaleType=sqlsrv_fetch_array($sqlSaleType))
+		{ echo '<option value="'.$SaleType['SaleType'].'">'.$SaleType['SaleTypeName'].'</option>';
+		}
+	?>
+	</select>
+	</td></tr>
+	<tr><td colspan="2">&nbsp;</td></tr>
 	
-	รหัสบิล:&nbsp;<input type="text" id="txt_id" name="txt_id">
-	&nbsp;&nbsp;ร้าน :&nbsp;<input type="text" id="txt_name" name="txt_name">
-	&nbsp;&nbsp;<B>DC: </B>
+	<tr><td align="center">
+	<B>DC: </B>
 	<select  id="txt_DC" name="txt_DC" style="width:170px;" >
-	<option value="">-เลือก DC-</option>
+	<option value="">-All-</option>
 		<? $sqlOp="select a.dc_groupname,a.dc_groupid
 			from st_user_group_dc a   ";
 			if($userType <>"7" and $userType2<>""){
@@ -171,15 +184,9 @@ $sqlSaleType=sqlsrv_query($con,$sqlSaleType);
 			}
 		?>
 	</select>
-	
-	
-	
-	</td></tr>
-	<tr><td colspan="2">&nbsp;</td></tr>
-	<tr><td align="center">
 	<B style="color:black;text-align:center;">จังหวัด  :</B>
 	<select style="width:150px;text-align:left;" id="txt_pro"  name="txt_pro" >
-	<option value="">-เลือก-</option>
+	<option value="">-All-</option>
 	<?	$sql3="SELECT * FROM dc_Province  order by PROVINCE_NAME asc  ";
 			$qry3=sqlsrv_query($con,$sql3);
 			while($detail3=sqlsrv_fetch_array($qry3))
@@ -191,12 +198,12 @@ $sqlSaleType=sqlsrv_query($con,$sqlSaleType);
 	</select>&nbsp;&nbsp;
 	<B style="color:black;text-align:center;">อำเภอ / แขวง  :</B>
 	<select style="width:150px;text-align:left;" id="txt_aum"  name="txt_aum" >
-	<option value="">-เลือก -</option>
+	<option value="">-All -</option>
 		
 	</select>&nbsp;&nbsp;
 	<B style="color:black;text-align:center;">ตำบล / แขวง  :</B>
 	<select style="width:150px;text-align:left;" id="txt_dis"  name="txt_dis" >
-	<option value="">-เลือก -</option>
+	<option value="">-All -</option>
 		
 	</select></td></tr>
 	
@@ -208,7 +215,12 @@ $sqlSaleType=sqlsrv_query($con,$sqlSaleType);
 	<option value="">-เลือก -</option>
 		
 	</select>&nbsp;&nbsp;--->
-	เลขที่ CN:&nbsp;<input type="text" id="txt_CNid" name="txt_CNid">
+	เลขที่ CN:&nbsp;<input type="text" id="txt_CNid" name="txt_CNid">&nbsp;
+	วันที่ยกเลิกCN :&nbsp;<input type="text" id="txtdateCN" name="txtdateCN" value="">
+	ถึง :&nbsp;<input type="text" id="txtdateCN2" name="txtdateCN2" value="">
+	<input type="checkbox" value="all" id="txt_all" name="txt_all">ดูทั้งหมด
+	<br><br>
+	
 	เรียง  :
 	<select style="width:100px;text-align:left;" id="order_n"  name="order_n" >
 	<option value="">-เลือก-</option>
@@ -223,9 +235,8 @@ $sqlSaleType=sqlsrv_query($con,$sqlSaleType);
 	<option value="ASC">น้อยไปมาก</option>
 	<option value="DESC">มากไปน้อย</option>
 	</select>
-	<input type="checkbox" value="all" id="txt_all" name="txt_all">ดูทั้งหมด
 	<input type="button" value="ค้นหา" class="myButton_form" id="btn_search" name="btn_search" align="center">
-	<br><br>
+	
 	
 	</td></tr>
 	</table>
@@ -237,6 +248,7 @@ $sqlSaleType=sqlsrv_query($con,$sqlSaleType);
 <br><br>
 <div id="txt_search" align="center">
 ยกเลิกบิลของเดือนปัจจุบัน
+<div>  **หมายเหตุ : บิลที่ยังไม่อนุมัติ จำนวนเงินCN เป็น0</div>
 <table  align="center" class="tables" >
 	<tr>
 	<th align="center"width="30px">ลำดับ</th>
@@ -256,6 +268,7 @@ $sqlSaleType=sqlsrv_query($con,$sqlSaleType);
 	<th align="center"width="200px">Approve โดย</th>
 	<th align="center"width="100px">เหตุผล</th>
 	<th align="center"width="100px">เลขที่ CN</th>
+	<th align="center"width="20px">จำนวนเงินCN</th>
 	<th align="center"width="20px">จัดการ</th>
 	</tr>
 	<? 	
@@ -275,10 +288,17 @@ $sqlSaleType=sqlsrv_query($con,$sqlSaleType);
 	,c.CustName ,c.AddressNum ,c.AddressMu 
 	,c.DISTRICT_NAME ,c.AMPHUR_NAME ,c.PROVINCE_NAME
 	,c.PROVINCE_CODE ,c.cust_type_name ,h.Approveby as 'by' 
-	from st_CN_head h left join st_View_cust_web c 
-	on c.CustNum =  h.CustNum  left join st_saletype ST
-	on h.SaleType = ST.SaleType 
+	,sum(d.totalamount) as totalamount
+	,sum(d.totaldiscount) as totaldiscount
+	,
+	case when h.CN_id=1 then sum(d.totalamount)-sum(d.totaldiscount) 
+	else 0
+	end total 
+	from st_CN_head h 
+	left join st_View_cust_web c on c.CustNum =  h.CustNum  
+	left join st_saletype ST on h.SaleType = ST.SaleType 
 	left join st_user UserSale on h.Createby=UserSale.User_id
+	left join st_CN_detail d on h.Ref_Docno=d.Ref_Docno
 	";
 
 if($_GET['id']){$filter.=" where  h.Ref_Docno  = '$_GET[id]' "; } 
@@ -296,6 +316,11 @@ else
 	}
 	if($ProDCString){$filter.="and c.PROVINCE_CODE in ($ProDCString) "; } 
  }
+ $filter.="group by h.Ref_Docno ,cast(h.Ref_Docdate as date) ,cast(h.Ref_Docdate as time)  ,h.SaleType 
+	,ST.SaleTypeName ,cast(h.Delivery_date as date)  ,cast(h.Delivery_date as time) ,h.CustNum 
+	,h.CN_id ,h.CN_name ,h.TaxInv ,h.Remark ,h.CN_Remark ,h.CN_Docno ,h.Createby,UserSale.Salecode ,UserSale.name,UserSale.surname 
+	,c.CustName ,c.AddressNum ,c.AddressMu ,c.DISTRICT_NAME ,c.AMPHUR_NAME ,c.PROVINCE_NAME ,c.PROVINCE_CODE ,c.cust_type_name ,h.Approveby ";
+	
 $filter.=" order by cast(h.Ref_Docdate as date)  asc "; 
 //echo $filter;
 
@@ -358,14 +383,17 @@ $filter.=" order by cast(h.Ref_Docdate as date)  asc ";
 	</td>
 	<td  ><?=$fil['CN_Remark']; ?></td>
 	<td  ><?=$fil['CN_Docno']; ?></td>
+	<td align="center"  ><?=number_format($fil['total']); $total=$total+$fil['total'];?></td>
 	<td align="center"  >
 	<a href="?page=edit_CreditNote&id=<?=$fil['Ref_Docno']; ?>" >
 	<img src="./images/edit.gif" style="cursor:pointer" alt="Complete">
 	</a>
 	</td>
-	
 	</tr>
 	<? } ?>
+	<tr class="mousechange" bgColor="#A0CD64" align="right" ><td colspan="16">รวม</td>
+	<td align="center"  ><?=number_format($total); ?></td>
+	</tr>
 	</table>
 </div>
 <?

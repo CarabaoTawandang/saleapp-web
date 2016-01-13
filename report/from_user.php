@@ -143,7 +143,7 @@ $(function(){
 			<br><br>
 		<b>ชื่อ</b><input type="text" id="txt_name" name="txt_name" value="">
 		<b> นามสกุล </b><input type="text" id="txt_surname" name="txt_surname" value="">
-		<b> Username </b><input type="text" id="txt_username" name="txt_username" value="">
+		<br><br><b> Username </b><input type="text" id="txt_username" name="txt_username" value="">
 		<b> UserId </b><input type="text" id="txt_userId" name="txt_userId" value="">
 			<br><br>
 			<b> ประเภทตำแหน่ง: </b>

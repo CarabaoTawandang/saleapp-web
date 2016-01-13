@@ -7,6 +7,10 @@
 		$userType= $_SESSION["RoleID"];
 		$userType2 = $_SESSION["RoleID_Lineid"];
 		//echo $userType." / ".$userType2;
+		$sqlRole="select RoleName_Linename from st_user_rolemaster_detail where RoleID_Lineid='$userType2' ";
+		$sqlRole=sqlsrv_query($con,$sqlRole); 
+		$sqlRole=sqlsrv_fetch_array($sqlRole);
+		//$sqlRole['RoleName_Linename'];
 ?>
 <nav id="ddmenu">
     
@@ -37,8 +41,21 @@
 			<li><a class="top-heading" href="?page=from_Inplan">3.วางแผน/วัน</a></li>
 			<li><a class="top-heading" href="?page=from_Inplan2">4.วางแผน/เดือน</a></li>
 			<li><a class="top-heading" href="?page=form_dailysales">5.สรุปยอดขายรายวัน</a></li>  <!---  Edit เพิ่มรายงาน ยอดขายรายวัน  --->
-			<li><a class="top-heading" href="?page=DetailProductSales">6.สรุปบิลรายวัน</a></li> <!---  Edit เพิ่มรายงาน ยอดขายรายวัน  --->
-			<li class="no-sub"><a class="top-heading" href="?page=from_Quotation">ใบเสนอขาย</a></li>
+			
+			
+			<li class="no-sub"><a class="top-heading" href="?page=from_Quotation">6.ใบเสนอขาย</a></li>
+			<li><a class="top-heading" href="#">รายงาน</a>
+				<i class="caret"></i>           
+				<div class="dropdown mayRight">
+				<div class="dd-inner">
+					<div class="column">
+					<a href="?page=DetailProductSales">รายงานสรุปบิลรายวัน</a>
+					<a  href="?page=form_dailysales2">รายงานสรุปยอดขายรายวัน(การเงิน)</a>
+					<a  href="?page=form_ReportCN">รายงานยกเลิกบิลCN</a>
+					</div>
+				</div>
+				</div>
+			</li>
 			<li class="no-sub"><a class="top-heading" href="dsr">ReportDSR</a></li>
 				<? if($_SESSION["RoleID_Lineid"]=="7_1"){ //-------------------------------------------------------------น้านง ?>
 				<li><a href="?page=from_cust" id="" >				ข้อมูลร้านค้า</a></li> 
@@ -61,10 +78,11 @@
 					<div class="column">
 						   
 							<a href="?page=StoctCard">1. รายงานสินค้าคงเหลือ</a>
-							<a href="?page=DetailProductSales">2. รายงานการขายประจำวัน </a>
+							<a href="?page=DetailProductSales">2. รายงานสรุปบิลรายวัน </a>
 							<a href="?page=fromTax">3. รายงานภาษีขาย </a>
 							<a  href="?page=form_dailysales2">4.รายงานสรุปยอดขายรายวัน(การเงิน)</a>
 							<a  href="?page=form_dailysales2ALLdc">5.รายงานสรุปยอดขายรายวัน(รวมศูนย์)</a>
+							<a  href="?page=form_ReportCN">6.รายงานยกเลิกบิลCN</a>
 					</div>
 				</div>
 				</div>
@@ -85,7 +103,7 @@
 		//การเงิน
 		else if($_SESSION["RoleID_Lineid"]=="7_3"){ ?>
 		
-			<li><a class="top-heading" href="#">บัญชี</a>
+			<li><a class="top-heading" href="#">การเงิน</a>
 				<i class="caret"></i>           
 				<div class="dropdown mayRight">
 				<div class="dd-inner">
@@ -115,7 +133,7 @@
 		
 		
 		
-		//admin
+		//admin + adminsale
 		else if($_SESSION["RoleID_Lineid"]=="7_1" or $_SESSION["RoleID_Lineid"]=="7_5"){ 
 		?>
 			<li class="no-sub"><a class="top-heading" href="?page=from_user">จัดการ User</a></li>
@@ -147,23 +165,6 @@
 			</li>
 			<? } ?>
 			</li>
-			<li class="no-sub"><a class="top-heading" href="dsr">ReportDSR</a></li>
-			<li><a class="top-heading" href="#">บัญชี</a>
-				<i class="caret"></i>           
-				<div class="dropdown mayRight">
-				<div class="dd-inner">
-					<div class="column">
-						   
-							<a href="?page=StoctCard">1. รายงานสินค้าคงเหลือ</a>
-							<a href="?page=DetailProductSales">	2. รายงานการขายประจำวัน </a>
-							<a href="?page=fromTax">	3. รายงานการภาษีขาย </a>
-							<a  href="?page=form_dailysales2">4.รายงานสรุปยอดขายรายวัน(การเงิน)</a>
-							<a  href="?page=form_dailysales2ALLdc">5.รายงานสรุปยอดขายรายวัน(รวมศูนย์)</a>
-					</div>
-				</div>
-				</div>
-			</li>
-			
 			<li><a class="top-heading" href="?page=stockBalanceAdmin">stock</a><!---?page=stockTotal--->
 				<i class="caret"></i>           
 				<div class="dropdown mayRight">
@@ -183,6 +184,24 @@
 			<li class="no-sub"><a class="top-heading" href="?page=from_cust">ข้อมูลร้านค้า</a></li>
 			<li class="no-sub"><a class="top-heading" href="?page=from_Quotation">ใบเสนอขาย</a></li>
 			<li class="no-sub"><a class="top-heading" href="?page=from_CreditNote">ยกเลิกบิล</a></li>
+			<li><a class="top-heading" href="#">บัญชี</a>
+				<i class="caret"></i>           
+				<div class="dropdown mayRight">
+				<div class="dd-inner">
+					<div class="column">
+						   
+							<a href="?page=StoctCard">1. รายงานสินค้าคงเหลือ</a>
+							<a href="?page=DetailProductSales">2. รายงานสรุปบิลรายวัน </a>
+							<a href="?page=fromTax">3. รายงานภาษีขาย </a>
+							<a  href="?page=form_dailysales2">4.รายงานสรุปยอดขายรายวัน(การเงิน)</a>
+							<a  href="?page=form_dailysales2ALLdc">5.รายงานสรุปยอดขายรายวัน(รวมศูนย์)</a>
+							<a  href="?page=form_ReportCN">6.รายงานยกเลิกบิลCN</a>
+					</div>
+				</div>
+				</div>
+			</li>
+			<li class="no-sub"><a class="top-heading" href="dsr">ReportDSR</a></li>
+			
 			 <? } ?>
 		
 		
@@ -208,8 +227,7 @@
 		
 		
 		
-		<li>DC:
-							<? 
+		<? 
 							$sqlDC="select a.dc_groupname,a.dc_groupid
 							from st_user_group_dc a  left join st_user u
 								on u.dc_groupid =a.dc_groupid
@@ -217,11 +235,7 @@
 							//echo $sqlOp;
 							$sqlDC=sqlsrv_query($con,$sqlDC);
 							$sqlDC=sqlsrv_fetch_array($sqlDC);
-							echo $sqlDC['dc_groupname'];
-							?>
-		</li>
-		<li>คลัง:
-							<? 
+							
 							$sqlLoc="select a.locationname,a.locationno
 								from st_warehouse_location a  left join st_user u
 								on u.warehouse_locationNo =a.locationno
@@ -229,15 +243,18 @@
 							//echo $sqlOp;
 							$sqlLoc=sqlsrv_query($con,$sqlLoc);
 							$sqlLoc=sqlsrv_fetch_array($sqlLoc);
-							echo $sqlLoc['locationname'];
+							
 							?>
-		</li>
 		<li><a class="top-heading" href="#/logout" id="logout">Logout<? echo " -> ".$_SESSION["NAME"];?></a>
 				<i class="caret"></i>           
 				<div class="dropdown mayRight">
 				<div class="dd-inner">
 					<div class="column">
 						   <a href="?page=Privacy_settings" id="Privacy_settings" >			Privacy settings</a>
+						   <a href="" id="" >DC:<? echo $sqlDC['dc_groupname'];?></a>
+						    <a href="" id="" >คลัง:<? echo $sqlLoc['locationname'];?></a>
+							<a href="" id="" >สิทธิ:<? echo $sqlRole['RoleName_Linename'];?></a>
+							
 							
 					</div>
 				</div>
