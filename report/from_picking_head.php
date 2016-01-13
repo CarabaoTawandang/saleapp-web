@@ -27,7 +27,8 @@ $(function(){
 		$('#btn,#btn_Search').button();
 		$('#dateStart,#dateEnd').datepicker({ dateFormat:'dd-mm-yy'});
 		$('#btn_Search').click(function(){
-		if(($('#dateStart').prop('value')=='')&&($('#dateEnd').prop('value')=='')&&($('#txt_sale').prop('value')==''))
+		if(($('#dateStart').prop('value')=='')&&($('#dateEnd').prop('value')=='')&&($('#txt_sale').prop('value')=='')
+		&&($('#txt_detail').prop('value')==''))
 					{alert("โปรดใส่สิ่งที่ต้องการที่ต้องการ !");}
 					else {
 					$('#txt_Search').html("<img src='images/89.gif'>");
@@ -59,8 +60,8 @@ $(function(){
 <form method="post" action="" id="frmSearch" name="frmSearch">
 <table cellpadding="0" cellspacing="0"  border="0" align="center"  >
 <tr><td colspan="2" align="center">
-	<b>วันที่จ่ายของเข้ารถ</b><input type="text" id="dateStart" name="dateStart" value="<? echo date('d-m-Y');?>">
-	<b> ถึง </b><input type="text" id="dateEnd" name="dateEnd" value="<? echo date('d-m-Y');?>">
+	<b>วันที่จ่ายของเข้ารถ</b><input type="text" id="dateStart" name="dateStart" value="">
+	<b> ถึง </b><input type="text" id="dateEnd" name="dateEnd" value="">
 	<b>จ่ายให้</b>
 		<select  id="txt_sale" name="txt_sale" style="width:170px;" required/>
 		<option value="">-เลือกพนักงานขาย-</option>
@@ -80,7 +81,8 @@ $(function(){
 		?>
 		</select>
 	<br><br>
-	<input type="button" id="btn_Search" name="btn_Search" value="ค้นหา">
+	<b> หมายเหตุ </b><input type="text" id="txt_detail" name="txt_detail" value="" size="50">
+	<br><br><input type="button" id="btn_Search" name="btn_Search" value="ค้นหา">
 	
 </td></tr>
 </table>

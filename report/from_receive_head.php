@@ -31,7 +31,8 @@ $(function(){
 		
 		$('#dateStart,#dateEnd').datepicker({ dateFormat:'dd-mm-yy'});
 		$('#btn_Search').click(function(){
-		if(($('#dateStart').prop('value')=='')&&($('#dateEnd').prop('value')=='')&&($('#txt_PS').prop('value')=='')&&($('#txt_PO').prop('value')==''))
+		if(($('#dateStart').prop('value')=='')&&($('#dateEnd').prop('value')=='')
+		&&($('#txt_PS').prop('value')=='')&&($('#txt_PO').prop('value')=='')&&($('#txt_detail').prop('value')==''))
 					{alert("โปรดใส่สิ่งที่ต้องการที่ต้องการ !");}
 					else {
 					$('#txt_Search').html("<img src='images/89.gif'>");
@@ -61,11 +62,13 @@ $(function(){
 <form method="post" action="" id="frmSearch" name="frmSearch">
 <table cellpadding="0" cellspacing="0"  border="0" align="center"  >
 <tr><td colspan="2" align="center">
-	<b>วันที่ตามใบส่งของ</b><input type="text" id="dateStart" name="dateStart" value="<? echo date('d-m-Y');?>">
-	<b> ถึง </b><input type="text" id="dateEnd" name="dateEnd" value="<? echo date('d-m-Y');?>">
+	<b>วันที่ตามใบส่งของ</b><input type="text" id="dateStart" name="dateStart" value="">
+	<b> ถึง </b><input type="text" id="dateEnd" name="dateEnd" value="">
 	<br><br>
 	<b> เลขที่D/O No.(PS) </b><input type="text" id="txt_PS" name="txt_PS" value="">
 	<b> ใบสั่งซื้อเลขที่ (PO)</b><input type="text" id="txt_PO" name="txt_PO" value="">
+	<br><br>
+	<b> หมายเหตุ </b><input type="text" id="txt_detail" name="txt_detail" value="" size="50">
 	<br><br>
 	<input type="button" id="btn_Search" name="btn_Search" value="ค้นหา">
 	

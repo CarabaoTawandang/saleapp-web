@@ -8,7 +8,7 @@ $picking_no =$_GET['picking_no'];
 $dateStart =trim($_POST['dateStart']);
 $dateEnd =trim($_POST['dateEnd']);
 $txt_sale =trim($_POST['txt_sale']);
-
+$txt_detail=trim($_POST['txt_detail']);
 				
 if($dateStart || $dateEnd){echo "<b>ค้นหาข้อมูลวันที่  "; echo $dateStart." ถึง  ".$dateEnd."</b><br>";}
 if($txt_sale){	echo "จ่ายให้ : "; 
@@ -56,7 +56,7 @@ if($picking_no){$sql.="and  st_warehouse_stock_picking_head.picking_no='$picking
 
 if($dateStart&&$dateStart){ $sql.="and cast(st_warehouse_stock_picking_head.picking_date as date) between '$dateStart' and '$dateEndt' ";}
 if($txt_sale){ $sql.="and st_warehouse_stock_picking_head.picking_user_id like '$txt_sale%' ";}
-
+if($txt_detail){ $sql.="and st_warehouse_stock_picking_head.picking_Remark  like '%$txt_detail%' ";}
 
 $sql.="order by 
 cast(st_warehouse_stock_picking_head.picking_date as date)  asc

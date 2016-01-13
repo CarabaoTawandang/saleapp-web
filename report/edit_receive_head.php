@@ -102,7 +102,7 @@ $(function()
     <div id="box">
 	<div class="header"><h3>แก้ไขรับของเข้าคลัง  :<?=$re['locationname'];?> เลขเอกสาร : <?=$re['receive_no'];?></h3><!---หัวเรื่องหลัก-->
            <p>&nbsp;</p><!---หัวเรื่องรอง-->
-		   <input type="button" value="ข้อมูลรับของเข้าคลัง" id="btn" onclick="window.location='?page=data_receive_head';" class="inner_position_right" >
+		   <input type="button" value="ข้อมูลรับของเข้าคลัง" id="btn" onclick="window.location='?page=from_receive_head';" class="inner_position_right" >
 	</div><div class="sep"></div><br>
 <form  method="post" name="frmuser" id="frmuser" action="?page=save_receive_head&do=edit" >
 <table cellpadding="0" cellspacing="0"  border="0" align="center"  class="box" width="1124px">

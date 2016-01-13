@@ -6,10 +6,11 @@ $USER_id=	$_SESSION["USER_id"];	//User ที่เข้าระบบ
 $receive_no=$_GET['receive_no'];
 
 
-$dateStart =$_POST['dateStart'];
-$dateEnd =$_POST['dateEnd'];
-$txt_PS =$_POST['txt_PS'];
-$txt_PO =$_POST['txt_PO'];
+$dateStart =trim($_POST['dateStart']);
+$dateEnd =trim($_POST['dateEnd']);
+$txt_PS =trim($_POST['txt_PS']);
+$txt_PO =trim($_POST['txt_PO']);
+$txt_detail=trim($_POST['txt_detail']);
 if($dateStart || $dateEnd){echo "<b>ค้นหาข้อมูลวันที่  "; echo $dateStart." ถึง  ".$dateEnd."</b><br>";}
 if($txt_PS){echo "เลขที่D/O No.(PS) "; echo $txt_PS."<br>";}
 if($txt_PO){echo "ใบสั่งซื้อเลขที่ (PO) "; echo $txt_PO."<br>";}
@@ -51,6 +52,7 @@ if($receive_no){ $sql.="and st_warehouse_stock_receive_head.receive_no='$receive
 if($dateStart&&$dateStart){ $sql.="and cast(st_warehouse_stock_receive_head.receive_date as date) between '$dateStart' and '$dateEndt' ";}
 if($txt_PS){ $sql.="and st_warehouse_stock_receive_head.ref_pack  like '$txt_PS%' ";}
 if($txt_PO){ $sql.="and st_warehouse_stock_receive_head.ref_docno like '$txt_PO%' ";}
+if($txt_detail){ $sql.="and st_warehouse_stock_receive_head.receive_Remark  like '%$txt_detail%' ";}
 
 $sql.="order by
 st_warehouse_stock_receive_head.CreateDate asc
@@ -108,7 +110,7 @@ $(function(){
 	<tr class="mousechange"  bgcolor="<?=$col;?>" height="30" align="center">
 		<? if($re['receive_no']<>$receive_no2){?>
 	<td  ><? echo $re['receive_no']; ?></td>
-	<td ><? echo date_format($re['receive_date2'],'d/m/Y')?></td>
+	<td bgcolor="<? if($re['receive_date2'] <> $receive_date2 ){echo "red";}?>" ><? echo date_format($re['receive_date2'],'d/m/Y');?></td>
 	<td  ><? echo $re['ref_pack'];?></td>
 	<td  ><? echo $re['ref_docno'];?></td>
 	<td ><?  if($re['receive_user']){echo$re['receive_user'];} else if($re['receive_company']){echo$re['receive_company'];}?>
@@ -143,6 +145,7 @@ $(function(){
 	</td>
 	</tr>
 	<? $receive_no2=$re['receive_no'];
+	$receive_date2 = $re['receive_date2'];
 	$r++;
 	}//while ?>
 	</table>
