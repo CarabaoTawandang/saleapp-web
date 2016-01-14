@@ -51,7 +51,8 @@ while($reDC=sqlsrv_fetch_array($sqlSale))
 	from st_plan_visit_head  a left join st_user b
 	on  a.Createby =b.User_id
 	where  b.dc_groupid='$txt_DC'   and cast(a.Visit_Docdate  as date) like '$Ym%'
-	group by cast(a.Visit_Docdate  as date)"; 
+	group by cast(a.Visit_Docdate  as date)
+	order by cast(a.Visit_Docdate  as date) asc"; 
 	$qryVisit=sqlsrv_query($con,$sqlVisit);
 
 
@@ -120,7 +121,10 @@ while($By=sqlsrv_fetch_array($ProductBy))
 </tr>
 <?while($reVisit=sqlsrv_fetch_array($qryVisit)){?>
 <tr align="center">
-<td class="mousechange" height="25"><? echo date_format($reVisit['dateVisit'],'d/m/Y');  $Ymd=date_format($reVisit['dateVisit'],'Y-m-d');  // date('d/m/Y',strtotime($reVisit['dateVisit']));
+<td class="mousechange" height="25">
+<? 
+	echo date_format($reVisit['dateVisit'],'d/m/Y'); 
+	$Ymd=date_format($reVisit['dateVisit'],'Y-m-d');  // date('d/m/Y',strtotime($reVisit['dateVisit']));
 	//หาตำบลที่เข้ามากสุดในวันนั้นๆ
 	$sqlDid="select B.DISTRICT_CODE
 	,B.DISTRICT_NAME
@@ -256,9 +260,9 @@ while($By=sqlsrv_fetch_array($ProductBy))
 	?>
 
 
-<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotaBox); $TotaBox2=$TotaBox2+$TotaBox;?></td>
-<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotalPack); $TotalPack2=$TotalPack2+$TotalPack;?></td>
-<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotalPrice); $TotalPrice2=$TotalPrice2+$TotalPrice;?></td>
+<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotaBox); $TotaBox2=$TotaBox2+$TotaBox; $TotaBox=0;?></td>
+<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotalPack); $TotalPack2=$TotalPack2+$TotalPack; $TotalPack=0;?></td>
+<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotalPrice); $TotalPrice2=$TotalPrice2+$TotalPrice; $TotalPrice=0;?></td>
 
 </tr>
 
@@ -283,9 +287,9 @@ while($By=sqlsrv_fetch_array($ProductBy))
 	}
 	?>
 
-<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotaBox);?></td>
-<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotalPack);?></td>
-<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotalPrice);?></td>
+<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotaBox2);?></td>
+<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotalPack2);?></td>
+<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotalPrice2);?></td>
 </tr>
 
 <tr  align="center">
@@ -307,9 +311,9 @@ while($By=sqlsrv_fetch_array($ProductBy))
 	}
 	?>
 
-<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotaBox/$row1);?></td>
-<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotalPack/$row1);?></td>
-<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotalPrice/$row1);?></td>
+<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotaBox2/$row1);?></td>
+<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotalPack2/$row1);?></td>
+<td class="mousechange" bgcolor="#F0F0F0"><?=number_format($TotalPrice2/$row1);?></td>
 </tr>
 
 </table><br><br>
