@@ -47,7 +47,8 @@ if($txt_status=='1')//ถ้ายืนยัน อนุมัติ
 	$MaxID ="P".$year."-".$txt_Saleid."-".$MaxID ; //----------------------ID CODE 
 	
 	//เปิดสินค้าที่บิลขอยกเลิก
-	$sqlQdetailsql="select q.Ref_Docno,q.P_Code ,pro.PRODUCTNAME,pro.st_unit_id as unit123 
+	$sqlQdetailsql="select q.Ref_Docno ,h.CustNum
+	,q.P_Code ,pro.PRODUCTNAME,pro.st_unit_id as unit123 
 	,q.st_unit_qty_1 ,q.st_unit_qty_2 ,q.st_unit_qty_3 ,q.st_unit_qty_1*u1.st_unit_qty as AA ,q.st_unit_qty_2*u2.st_unit_qty as BB ,q.st_unit_qty_3 As CC 
 	,(isnull(q.st_unit_qty_1*u1.st_unit_qty,0)+isnull(q.st_unit_qty_2*u2.st_unit_qty,0)+ isnull(q.st_unit_qty_3,0)) as total
 	,(isnull(q.st_unit_qty_1*u1.st_unit_qty,0)+isnull(q.st_unit_qty_2*u2.st_unit_qty,0)+ isnull(q.st_unit_qty_3,0))/u1.st_unit_qty as box 
@@ -59,6 +60,7 @@ if($txt_status=='1')//ถ้ายืนยัน อนุมัติ
 	on q.P_Code =pro.P_Code left join st_item_unit_con u1 
 	on u1.P_Code = q.P_Code and u1.st_unit_id= 'ลัง' left join st_item_unit_con u2 
 	on u2.P_Code = q.P_Code and u2.st_unit_id= 'แพ็ค'
+	left join st_CN_head h on h.Ref_Docno=q.Ref_Docno
 	where q.Ref_Docno ='$txt_CNid' ";
 	$sqlQdetail=sqlsrv_query($con,$sqlQdetailsql); 
 	
@@ -96,6 +98,12 @@ if($txt_status=='1')//ถ้ายืนยัน อนุมัติ
 		$stockUpTrues="update st_warehouse_sale_stock set wh_stock_qty='$stockTRUE' where P_Code='$item' 
 		and User_id='$txt_Saleid' ";
 		$qryUpTrues=sqlsrv_query($con,$stockUpTrues);
+		
+		//หักคะแนนออก
+		$TotalDel= $Total*-1;
+		$sqlInExchange="insert into st_cust_exchange (CustNum,Createby,Updateby,CreateDate,UpdateDate,cust_Qty ,P_Code) values
+		 ('$QCustNum','$USER_id','$USER_id',GETDATE(),GETDATE(),'$TotalDel' ,'$item') ";
+		$sqlInExchange=sqlsrv_query($con,$sqlInExchange);
 		
 		//echo "<br>*";echo $stockUpTrues;		
 		$t++;

@@ -8,7 +8,8 @@
 		//echo $userType." / ".$userType2;
 		$id=$_GET['id'];
 		
-		$filter="select h.Ref_Docno,cast(h.Delivery_date as date) as Delivery_date ,cast(h.Delivery_date as time) as Delivery_time
+		$filter="select h.Ref_Docno,h.CustNum
+		,cast(h.Delivery_date as date) as Delivery_date ,cast(h.Delivery_date as time) as Delivery_time
 		,h.CustNum as Cust1 ,h.CN_id ,h.CN_name ,h.Remark ,c.CustName ,c.AddressNum ,c.AddressMu ,c.DISTRICT_NAME ,c.AMPHUR_NAME 
 		,c.PROVINCE_NAME,c.PROVINCE_CODE ,c.cust_type_name ,h.Createby ,st_user.Salecode,st_user.name,st_user.surname 
 		from st_CN_head h left join st_View_cust_web c on c.CustNum = h.CustNum left join st_user 
@@ -80,7 +81,7 @@ $(function(){
 </td></tr>
 <tr ><td colspan="2">&nbsp;</td></tr>
 <tr class="mousechange">
-<td ><B>ร้านค้า</td>
+<td ><B>ร้านค้า</B><br><?=$fil['CustNum'];?></td>
 <td><? 				echo $fil['CustName'];
 					if($fil['AddressNum']){echo "  ที่อยู่  ".$fil['AddressNum'];}
 					if($fil['AddressMu']){echo " ม.  ".$fil['AddressMu'];}
