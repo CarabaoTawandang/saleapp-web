@@ -1,4 +1,4 @@
-<?//------------------------------------------------------แก้ไข โดย DREAM 10/07/2015------------------------------------
+***<?//------------------------------------------------------แก้ไข โดย DREAM 10/07/2015------------------------------------
 		session_start();
 		set_time_limit(0);
 		include("../includes/config.php");
@@ -81,14 +81,14 @@
 
 <tr align="right" >
 <td align="center" >ยอดยกมา</td>
-<td> </td>
-<td> </td>
+<td><? echo number_format($aa); ?></td>
+<td></td>
 <td><? echo number_format($aa); ?></td>
 </tr>
 
 <tr  align="right" >
-<td align="center" ><?=date_format($re['date'],'d-m-Y');?></td>
-<td><?  $TotalUnitMax =$re['TotalUnitMax']+$aa; echo  number_format($re['TotalUnitMax']); ?></td>
+<td align="center" >รับเข้า<? //date_format($re['date'],'d-m-Y');?></td>
+<td><?  $TotalUnitMax =$re['TotalUnitMax']+$aa;   $TotalBa= $re['TotalUnitMax']+$aa; echo  number_format($re['TotalUnitMax']); ?></td>
 <td> </td>
 <td><? echo number_format($TotalUnitMax); ?></td>
 </tr>
@@ -107,13 +107,20 @@ while($re2=sqlsrv_fetch_array($sql2)){?>
 <td align="center" ><?=date_format($re2['date'],'d-m-Y');?></td>
 <td></td>
 <td><? $picking_qty= $re2['picking_qty']/$re2['st_unit_qty']; 
-	echo number_format($picking_qty); 
+	echo number_format($picking_qty);  $picking_qtyTotal=$picking_qtyTotal+$picking_qty;
 	$TotalUnitMax =$TotalUnitMax - $picking_qty ;
 	?></td>
 <td><? echo number_format($TotalUnitMax); ?></td>
 </tr>
-<? } ?>
 
+
+<? } ?>
+<tr align="right" >
+<td align="center" >สรุปเหลือ</td>
+<td><? echo number_format($TotalBa); ?></td>
+<td><? echo number_format($picking_qtyTotal); ?></td>
+<td><? echo number_format($TotalUnitMax); ?></td>
+</tr>
 
 
 </table>

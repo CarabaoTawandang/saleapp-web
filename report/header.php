@@ -126,7 +126,10 @@
 			<li class="no-sub"><a class="top-heading" href="?page=from_CreditNote">ยกเลิกบิล</a></li>
 		<? }
 		
+		else if($_SESSION["RoleID_Lineid"]=="7_7"){ ?>
 		
+			<li class="no-sub"><a class="top-heading" href="?page=from_cust">ข้อมูลร้านค้า</a></li>
+		<? }
 		
 		
 		

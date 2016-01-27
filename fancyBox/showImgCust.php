@@ -367,6 +367,9 @@ if($_GET['do']=="del")
 		$sqlDel ="delete st_photo_detail where PhotoLocation='$e1' and cast(TimeStamp as date)='$e2' and cast(TimeStamp as time)='$e3' ";
 		
 		
+		$sqlIn="insert into st_photo_delete(PhotoLocation,CreateDate1) values ('$e1',GETDATE()) ";
+		$sqlIn=sqlsrv_query($con,$sqlIn);
+		
 		/*$img='http://saletool-api.carabao.co.th/'.$checkboxs;
 		if (unlink($img))
 		{

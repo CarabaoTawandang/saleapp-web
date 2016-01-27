@@ -12,21 +12,19 @@ session_start();
 <body>TEST CODE Check โอนเงิน row เบิ้ล
 <?
 		$a=1;
-$sqlSelect1="select user_id,Date_pay ,count(Date_pay) as c, pay
-from st_dailysales
-group by user_id,Date_pay , pay
-having count(Date_pay)>1
-order by count(Date_pay) desc
+$sqlSelect1="select  CustNum, PhotoLocation,count(PhotoLocation) as COUNT_photo
+  FROM st_photo_detail
+  group by CustNum, PhotoLocation
+  having count(PhotoLocation) >1
+  order by  count(PhotoLocation)  desc
 ";
 $qrySelect1 =sqlsrv_query($con,$sqlSelect1);
 while($Select1=sqlsrv_fetch_array($qrySelect1)){
-	echo '<br>'.$a.' '.$Select1['user_id'].'  = '.$Select1['Date_pay'].'  = '.$Select1['pay'].'  = '.$Select1['c'];
+	echo '<br>'.$a.' '.$Select1['CustNum'].'  = '.$Select1['PhotoLocation'].'  = '.$Select1['COUNT_photo'];
+	$COUNT_photo=$Select1['COUNT_photo']-1;
 	
-	echo ' = '.$sqlDel="set rowcount 1
-	delete from st_dailysales
-	where user_id='$Select1[user_id]'
-	and Date_pay ='$Select1[Date_pay]'
-	and pay ='$Select1[pay]'	";
+	$sqlDel="set rowcount $COUNT_photo
+	delete st_photo_detail where PhotoLocation='$Select1[PhotoLocation]' and CustNum='$Select1[CustNum]' ";
 	//$qtyDel =sqlsrv_query($con,$sqlDel);if($qtyDel){echo '  ==  Del แล้ว';};
 	$a++;}//วน PRODUCT
 ?>

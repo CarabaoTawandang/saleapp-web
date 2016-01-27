@@ -177,6 +177,7 @@ $r=1;
 			}
 			else
 			{
+			echo $rowsqlPacDetail;
 			echo "<a href='fancyBox/showImgCust.php?&id=".$re['CustNum']."' target='_blank' >";
 			echo "<span id='mouseOver'><div id='img3'>".$rowsqlPacDetail."</div>";
 			echo "<img src ='images/My-Pictures-icon.png' widih='20px' height='20px'>";
